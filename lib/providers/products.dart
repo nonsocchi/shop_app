@@ -1,5 +1,3 @@
-// ignore_for_file: prefer_final_fields
-
 import 'package:flutter/material.dart';
 
 import 'product.dart';
@@ -42,6 +40,10 @@ class Products with ChangeNotifier {
 
   List<Product> get items {
     return [..._items];
+  }
+
+  List<Product> get favouriteItems {
+    return _items.where((productItem) => productItem.isFavourite).toList();
   }
 
   Product findById(String id) {
