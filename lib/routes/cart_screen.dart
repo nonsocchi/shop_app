@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 import '../providers/cart.dart';
+import '../widgets/cart_item.dart';
 
 class CartScreen extends StatelessWidget {
   const CartScreen({Key? key}) : super(key: key);
@@ -48,9 +49,22 @@ class CartScreen extends StatelessWidget {
               ),
             ),
           ),
+          const SizedBox(
+            height: 10.0,
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: cart.itemCount,
+              itemBuilder: (ctx, i) => CartItem(
+                id: cart.items.values.toList()[i].id,
+                price: cart.items.values.toList()[i].price,
+                quantity: cart.items.values.toList()[i].quantity,
+                title: cart.items.values.toList()[i].title,
+              ),
+            ),
+          )
         ],
       ),
     );
   }
 }
-// Theme.of(context).colorScheme.primary
