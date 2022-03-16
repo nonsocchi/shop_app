@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
@@ -8,6 +6,8 @@ import '../providers/products.dart';
 
 class ProductDetailScreen extends StatelessWidget {
   static const routeNmae = '/product-detail';
+
+  const ProductDetailScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +22,7 @@ class ProductDetailScreen extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Container(
+            SizedBox(
               height: 300.0,
               width: double.infinity,
               child: Image.network(
