@@ -7,13 +7,13 @@ class UserProductItem extends StatelessWidget {
     required this.imageUrl,
   }) : super(key: key);
 
-  final String title;
+  final String? title;
   final String imageUrl;
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: Text(title),
+      title: Text(title!),
       leading: CircleAvatar(
         backgroundImage: NetworkImage(imageUrl),
       ),

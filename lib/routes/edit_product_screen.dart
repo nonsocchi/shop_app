@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../providers/product.dart';
+
 class EditProductScreen extends StatefulWidget {
   const EditProductScreen({Key? key}) : super(key: key);
   static const routeName = '/edit-product';
@@ -11,6 +13,14 @@ class EditProductScreen extends StatefulWidget {
 class _EditProductScreenState extends State<EditProductScreen> {
   final _imageUrlController = TextEditingController();
   final _imageUrlFocusNode = FocusNode();
+  final _form = GlobalKey<FormState>();
+  var _editedProduct = Product(
+    id: '',
+    title: '',
+    price: 0.00,
+    description: '',
+    imageUrl: '',
+  );
 
   @override
   void initState() {
@@ -32,30 +42,51 @@ class _EditProductScreenState extends State<EditProductScreen> {
     }
   }
 
+  void _saveForm() {
+    _form.currentState!.save();
+    print(_editedProduct.title);
+    print(_editedProduct.price);
+    print(_editedProduct.description);
+    print(_editedProduct.imageUrl);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Edit Product'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.save),
+            onPressed: _saveForm,
+          )
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
+          key: _form,
           child: ListView(
             children: [
               TextFormField(
                 decoration: const InputDecoration(labelText: 'Title'),
                 textInputAction: TextInputAction.next,
+                onSaved: (newValue) =>
+                    _editedProduct = _editedProduct.copyWith(title: newValue),
               ),
               TextFormField(
                 decoration: const InputDecoration(labelText: 'Price'),
                 textInputAction: TextInputAction.next,
                 keyboardType: TextInputType.number,
+                onSaved: (newValue) => _editedProduct =
+                    _editedProduct.copyWith(price: double.parse(newValue!)),
               ),
               TextFormField(
                 decoration: const InputDecoration(labelText: 'Description'),
                 maxLines: 3,
                 keyboardType: TextInputType.multiline,
+                onSaved: (newValue) => _editedProduct =
+                    _editedProduct.copyWith(description: newValue),
               ),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
@@ -86,6 +117,9 @@ class _EditProductScreenState extends State<EditProductScreen> {
                       controller: _imageUrlController,
                       focusNode: _imageUrlFocusNode,
                       onEditingComplete: () => setState(() {}),
+                      onFieldSubmitted: (_) => _saveForm(),
+                      onSaved: (newValue) => _editedProduct =
+                          _editedProduct.copyWith(imageUrl: newValue),
                     ),
                   ),
                 ],
