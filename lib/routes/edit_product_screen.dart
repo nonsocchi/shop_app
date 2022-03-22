@@ -38,11 +38,20 @@ class _EditProductScreenState extends State<EditProductScreen> {
 
   void _updateImageUrl() {
     if (!_imageUrlFocusNode.hasFocus) {
+      if (!_imageUrlController.text.startsWith('http') &&
+          !_imageUrlController.text.startsWith('https')) {
+        return;
+      }
       setState(() {});
     }
   }
 
   void _saveForm() {
+    final isValid = _form.currentState!.validate();
+
+    if (!isValid) {
+      return;
+    }
     _form.currentState!.save();
     print(_editedProduct.title);
     print(_editedProduct.price);
@@ -73,21 +82,42 @@ class _EditProductScreenState extends State<EditProductScreen> {
                 textInputAction: TextInputAction.next,
                 onSaved: (newValue) =>
                     _editedProduct = _editedProduct.copyWith(title: newValue),
+                validator: (value) =>
+                    value!.isEmpty ? 'Please provide a title.' : null,
               ),
               TextFormField(
-                decoration: const InputDecoration(labelText: 'Price'),
-                textInputAction: TextInputAction.next,
-                keyboardType: TextInputType.number,
-                onSaved: (newValue) => _editedProduct =
-                    _editedProduct.copyWith(price: double.parse(newValue!)),
-              ),
+                  decoration: const InputDecoration(labelText: 'Price'),
+                  textInputAction: TextInputAction.next,
+                  keyboardType: TextInputType.number,
+                  onSaved: (newValue) => _editedProduct =
+                      _editedProduct.copyWith(price: double.parse(newValue!)),
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Please enter a price.';
+                    }
+                    if (double.tryParse(value) == null) {
+                      return 'Please enter a valid number.';
+                    }
+                    if (double.parse(value) <= 0) {
+                      return 'Please enter a number greater than zero.';
+                    }
+                    return null;
+                  }),
               TextFormField(
-                decoration: const InputDecoration(labelText: 'Description'),
-                maxLines: 3,
-                keyboardType: TextInputType.multiline,
-                onSaved: (newValue) => _editedProduct =
-                    _editedProduct.copyWith(description: newValue),
-              ),
+                  decoration: const InputDecoration(labelText: 'Description'),
+                  maxLines: 3,
+                  keyboardType: TextInputType.multiline,
+                  onSaved: (newValue) => _editedProduct =
+                      _editedProduct.copyWith(description: newValue),
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Please enter a description.';
+                    }
+                    if (value.length < 10) {
+                      return 'Description should be at least 10 characters long.';
+                    }
+                    return null;
+                  }),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
@@ -120,6 +150,16 @@ class _EditProductScreenState extends State<EditProductScreen> {
                       onFieldSubmitted: (_) => _saveForm(),
                       onSaved: (newValue) => _editedProduct =
                           _editedProduct.copyWith(imageUrl: newValue),
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'Please enter an image URL.';
+                        }
+                        if (!value.startsWith('http') &&
+                            !value.startsWith('https')) {
+                          return 'Please enter a valid URL.';
+                        }
+                        return null;
+                      },
                     ),
                   ),
                 ],
