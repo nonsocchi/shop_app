@@ -16,18 +16,48 @@ class _EditProductScreenState extends State<EditProductScreen> {
   final _imageUrlController = TextEditingController();
   final _imageUrlFocusNode = FocusNode();
   final _form = GlobalKey<FormState>();
-  var _editedProduct = Product(
-    id: '',
+  Product _editedProduct = Product(
+    id: null,
     title: '',
     price: 0.00,
     description: '',
     imageUrl: '',
   );
+  Map<String, String> _initValues = {
+    'title': '',
+    'description': '',
+    'price': '',
+    'imageUrl': '',
+  };
+  bool _isInit = true;
 
   @override
   void initState() {
     _imageUrlFocusNode.addListener(_updateImageUrl);
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    if (_isInit) {
+      if (ModalRoute.of(context)!.settings.arguments != null) {
+        final String? productId =
+            ModalRoute.of(context)!.settings.arguments as String;
+        if (productId != null) {
+          _editedProduct =
+              Provider.of<Products>(context, listen: false).findById(productId);
+          _initValues = {
+            'title': _editedProduct.title,
+            'description': _editedProduct.description,
+            'price': _editedProduct.price.toString(),
+            'imageUrl': '',
+          };
+          _imageUrlController.text = _editedProduct.imageUrl;
+        }
+      }
+    }
+    _isInit = false;
+    super.didChangeDependencies();
   }
 
   @override
@@ -55,8 +85,14 @@ class _EditProductScreenState extends State<EditProductScreen> {
       return;
     }
     _form.currentState!.save();
-    Provider.of<Products>(context, listen: false).addProduct(_editedProduct);
-    Navigator.of(context).pop();
+    if (_editedProduct.id != null) {
+      Provider.of<Products>(context, listen: false)
+          .updateProduct(_editedProduct.id, _editedProduct);
+      Navigator.of(context).pop();
+    } else {
+      Provider.of<Products>(context, listen: false).addProduct(_editedProduct);
+      Navigator.of(context).pop();
+    }
   }
 
   @override
@@ -78,19 +114,28 @@ class _EditProductScreenState extends State<EditProductScreen> {
           child: ListView(
             children: [
               TextFormField(
+                initialValue: _initValues['title'],
                 decoration: const InputDecoration(labelText: 'Title'),
                 textInputAction: TextInputAction.next,
-                onSaved: (newValue) =>
-                    _editedProduct = _editedProduct.copyWith(title: newValue),
+                onSaved: (newValue) => _editedProduct = _editedProduct.copyWith(
+                  title: newValue,
+                  id: _editedProduct.id,
+                  isFavourite: _editedProduct.isFavourite,
+                ),
                 validator: (value) =>
                     value!.isEmpty ? 'Please provide a title.' : null,
               ),
               TextFormField(
+                  initialValue: _initValues['price'],
                   decoration: const InputDecoration(labelText: 'Price'),
                   textInputAction: TextInputAction.next,
                   keyboardType: TextInputType.number,
-                  onSaved: (newValue) => _editedProduct =
-                      _editedProduct.copyWith(price: double.parse(newValue!)),
+                  onSaved: (newValue) =>
+                      _editedProduct = _editedProduct.copyWith(
+                        price: double.parse(newValue!),
+                        id: _editedProduct.id,
+                        isFavourite: _editedProduct.isFavourite,
+                      ),
                   validator: (value) {
                     if (value!.isEmpty) {
                       return 'Please enter a price.';
@@ -104,11 +149,16 @@ class _EditProductScreenState extends State<EditProductScreen> {
                     return null;
                   }),
               TextFormField(
+                  initialValue: _initValues['description'],
                   decoration: const InputDecoration(labelText: 'Description'),
                   maxLines: 3,
                   keyboardType: TextInputType.multiline,
-                  onSaved: (newValue) => _editedProduct =
-                      _editedProduct.copyWith(description: newValue),
+                  onSaved: (newValue) =>
+                      _editedProduct = _editedProduct.copyWith(
+                        description: newValue,
+                        id: _editedProduct.id,
+                        isFavourite: _editedProduct.isFavourite,
+                      ),
                   validator: (value) {
                     if (value!.isEmpty) {
                       return 'Please enter a description.';
@@ -148,8 +198,12 @@ class _EditProductScreenState extends State<EditProductScreen> {
                       focusNode: _imageUrlFocusNode,
                       onEditingComplete: () => setState(() {}),
                       onFieldSubmitted: (_) => _saveForm(),
-                      onSaved: (newValue) => _editedProduct =
-                          _editedProduct.copyWith(imageUrl: newValue),
+                      onSaved: (newValue) =>
+                          _editedProduct = _editedProduct.copyWith(
+                        imageUrl: newValue,
+                        id: _editedProduct.id,
+                        isFavourite: _editedProduct.isFavourite,
+                      ),
                       validator: (value) {
                         if (value!.isEmpty) {
                           return 'Please enter an image URL.';

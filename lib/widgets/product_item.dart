@@ -47,7 +47,7 @@ class ProductItem extends StatelessWidget {
             color: Theme.of(context).colorScheme.secondary,
             onPressed: () {
               cart.addItem(
-                product.id,
+                product.id!,
                 product.price,
                 product.title,
               );
@@ -58,7 +58,7 @@ class ProductItem extends StatelessWidget {
                   duration: const Duration(seconds: 2),
                   action: SnackBarAction(
                     label: 'UNDO',
-                    onPressed: () => cart.removeSingleItem(product.id),
+                    onPressed: () => cart.removeSingleItem(product.id!),
                   ),
                 ),
               );
