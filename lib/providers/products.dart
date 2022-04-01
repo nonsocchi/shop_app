@@ -4,6 +4,8 @@ import 'dart:convert';
 
 import 'product.dart';
 
+const url = 'https://shop-app-e7566-default-rtdb.firebaseio.com/products.json';
+
 class Products with ChangeNotifier {
   final List<Product> _items = [
     Product(
@@ -52,8 +54,16 @@ class Products with ChangeNotifier {
     return _items.firstWhere((product) => product.id == id);
   }
 
+  Future<void> fetchAndSetProducts() async {
+    try {
+      final response = await http.get(Uri.parse(url));
+      print(json.decode(response.body));
+    } catch (error) {
+      rethrow;
+    }
+  }
+
   Future<void> addProduct(Product product) async {
-    const url = 'https://shop-app-e7566-default-rtdb.firebaseio.com/products';
     try {
       final response = await http.post(
         Uri.parse(url),
