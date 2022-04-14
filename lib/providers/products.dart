@@ -58,16 +58,22 @@ class Products with ChangeNotifier {
   Future<void> fetchAndSetProducts() async {
     try {
       final response = await http.get(Uri.parse(url));
-      final data = json.decode(response.body) as Map<String, dynamic>;
+      final Map<String, dynamic>? data =
+          json.decode(response.body) as Map<String, dynamic>?;
+      if (data == null) {
+        return;
+      }
       final List<Product> loadedProducts = [];
       data.forEach((prodId, prodData) {
-        loadedProducts.add(Product(
-          id: prodId,
-          title: prodData['title'],
-          description: prodData['description'],
-          price: prodData['price'],
-          imageUrl: prodData['imageUrl'],
-        ));
+        loadedProducts.add(
+          Product(
+            id: prodId,
+            title: prodData['title'],
+            description: prodData['description'],
+            price: prodData['price'],
+            imageUrl: prodData['imageUrl'],
+          ),
+        );
       });
       _items = loadedProducts;
       notifyListeners();
