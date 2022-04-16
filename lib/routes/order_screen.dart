@@ -28,12 +28,13 @@ class OrderScreen extends StatelessWidget {
               );
             } else {
               return Consumer<Orders>(
-                  builder: (ctx, orderData, child) => ListView.builder(
-                        itemBuilder: (ctx, i) => od.OrderItem(
-                          order: orderData.orders[i],
-                        ),
-                        itemCount: orderData.orders.length,
-                      ));
+                builder: (ctx, orderData, child) => ListView.builder(
+                  itemBuilder: (ctx, i) => od.OrderItem(
+                    order: orderData.orders[i],
+                  ),
+                  itemCount: orderData.orders.length,
+                ),
+              );
             }
           }
         },
