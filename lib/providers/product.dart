@@ -41,9 +41,9 @@ class Product with ChangeNotifier {
     isFavourite = newValue;
   }
 
-  Future<void> toggleFavourite() async {
+  Future<void> toggleFavourite(String? token) async {
     final String url =
-        'https://shop-app-e7566-default-rtdb.firebaseio.com/products/$id.json';
+        'https://shop-app-e7566-default-rtdb.firebaseio.com/products/$id.json?auth=$token';
     final oldStatus = isFavourite;
     isFavourite = !isFavourite;
     notifyListeners();

@@ -25,35 +25,42 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider.value(
           value: Auth(),
         ),
-        ChangeNotifierProvider(
-          create: (ctx) => Products(),
+        ChangeNotifierProxyProvider<Auth, Products>(
+          create: (ctx) => Products('', []),
+          update: (ctx, auth, previousProducts) => Products(auth.token,
+              previousProducts == null ? [] : previousProducts.items),
         ),
         ChangeNotifierProvider(
           create: (ctx) => Cart(),
         ),
-        ChangeNotifierProvider(
-          create: (ctx) => Orders(),
+        ChangeNotifierProxyProvider<Auth, Orders>(
+          create: (ctx) => Orders('', []),
+          update: (ctx, auth, previousOrders) =>
+              Orders(auth.token, previousOrders?.orders ?? []),
         )
       ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'MyShop',
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSwatch(
-            primarySwatch: Colors.purple,
-          ).copyWith(
-            secondary: Colors.deepOrange,
+      child: Consumer<Auth>(
+        builder: (context, auth, _) => MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'MyShop',
+          theme: ThemeData(
+            colorScheme: ColorScheme.fromSwatch(
+              primarySwatch: Colors.purple,
+            ).copyWith(
+              secondary: Colors.deepOrange,
+            ),
+            fontFamily: 'Lato',
           ),
-          fontFamily: 'Lato',
+          home:
+              auth.isAuth ? const ProductsOverviewScreen() : const AuthScreen(),
+          routes: {
+            ProductDetailScreen.routeNmae: (ctx) => const ProductDetailScreen(),
+            CartScreen.routeName: (ctx) => const CartScreen(),
+            OrderScreen.routeName: (ctx) => const OrderScreen(),
+            UserProductsScreen.routeName: (ctx) => const UserProductsScreen(),
+            EditProductScreen.routeName: (ctx) => const EditProductScreen(),
+          },
         ),
-        home: const AuthScreen(),
-        routes: {
-          ProductDetailScreen.routeNmae: (ctx) => const ProductDetailScreen(),
-          CartScreen.routeName: (ctx) => const CartScreen(),
-          OrderScreen.routeName: (ctx) => const OrderScreen(),
-          UserProductsScreen.routeName: (ctx) => const UserProductsScreen(),
-          EditProductScreen.routeName: (ctx) => const EditProductScreen(),
-        },
       ),
     );
   }
