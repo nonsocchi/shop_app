@@ -12,7 +12,7 @@ class UserProductItem extends StatelessWidget {
     required this.imageUrl,
   }) : super(key: key);
 
-  final String id;
+  final String? id;
   final String? title;
   final String imageUrl;
 
@@ -40,7 +40,7 @@ class UserProductItem extends StatelessWidget {
               onPressed: () async {
                 try {
                   await Provider.of<Products>(context, listen: false)
-                      .deleteProduct(id);
+                      .deleteProduct(id!);
                 } catch (error) {
                   deletedScaffold.showSnackBar(
                     const SnackBar(
