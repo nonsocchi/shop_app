@@ -27,7 +27,7 @@ This is a simple shopping app where users can sign up and/or login to:
 | Dart | 2.16.2 |
 
 ### Finished App
-![Shop App demo gif](https://github.com/nonsocchi/Chat_app/blob/master/images/Chat%20app%20demo.gif)
+![Shop App demo gif](https://github.com/nonsocchi/shop_app/blob/master/assets/images/chat_app_demo.gif)
 
 ### Learning Points
 - How to incorporate Firebase into your Flutter projects.
