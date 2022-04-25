@@ -1,4 +1,4 @@
-## Shop App
+##  MyShop App
 A simple shop app built with [Flutter](https://flutter.dev/). The chat app uses [Firebase](https://firebase.google.com/), specifically Firebase's Realtime Database and the Firebase authentication package to:
 - Store and sync data with a NoSQL cloud database,
 - secure authentication methods.
@@ -32,12 +32,12 @@ This is a simple shopping app where users can sign up and/or login to:
 ### Learning Points
 - How to incorporate Firebase into your Flutter projects.
 - How to use Firebase authentication to register and sign in users.
-- How to create beautiful animations using the Flutter Hero widget.
+- How to create animations using the Flutter Hero widget and Animated Containers.
 - How to create custom aniamtions using Flutter's animation controller.
 - Learn all about mixins and how they differ from superclasses.
 - Learn about Streams and how they work.
 - Learn to use ListViews to build scrolling views.
-- How to use Firebase Cloud Firestore to store and retrieve data on the fly.
+- How to use Firebase Realtime Database to store and retrieve data on the fly.
 
 #### Additional Resources
 - [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
